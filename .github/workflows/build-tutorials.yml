@@ -5,9 +5,7 @@ on:
   push:
     branches:
       - main
-env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.CIRCLECI_AWS_ACCESS_KEY_FOR_PYTORCH_TUTORIAL_BUILD_PR_S3_BUCKET }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.CIRCLECI_AWS_SECRET_KEY_FOR_PYTORCH_TUTORIAL_BUILD_PR_S3_BUCKET }}
+
 jobs:
   worker:
     name: pytorch_tutorial_build_worker
@@ -92,6 +90,9 @@ jobs:
           if-no-files-found: error
           path: worker_${{ matrix.shard }}.7z
           s3-prefix: temp/${{ github.event.pull_request.number }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CIRCLECI_AWS_ACCESS_KEY_FOR_PYTORCH_TUTORIAL_BUILD_PR_S3_BUCKET }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CIRCLECI_AWS_SECRET_KEY_FOR_PYTORCH_TUTORIAL_BUILD_PR_S3_BUCKET }}
 
       - name: Teardown Linux
         uses: pytorch/test-infra/.github/actions/teardown-linux@main
